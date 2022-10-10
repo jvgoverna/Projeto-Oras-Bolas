@@ -1,4 +1,5 @@
 import math
+from random import uniform
 linha = -1
 posx = []
 posy = []
