@@ -4,8 +4,6 @@ posx = []
 posy = []
 bolay = []
 bolax = []
-robox = []
-roboy =[]
 
 for indice in open("trajetoria_bola_diurno.txt","r"):
     if linha == -1:
