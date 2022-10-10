@@ -27,4 +27,3 @@ def posicao():
         print("%.3f  %.3f" %(bolax[i], bolay[i]))
 
 posicao()
-#para achar a distancia entre o robo e a bolinha podemos usar a fórmula de distância entre dois pontos:
