@@ -1,4 +1,4 @@
-import math
+from random import uniform
 linha = -1
 posx = []
 posy = []
@@ -27,4 +27,8 @@ def posicao():
         print("%.3f  %.3f" %(bolax[i], bolay[i]))
 
 posicao()
-#para achar a distancia entre o robo e a bolinha podemos usar a fórmula de distância entre dois pontos:
+
+robox = uniform(0 , 2)
+roboy = uniform(0 , 1.5)
+print("X do Robo: %.2f" % (robox))
+print("Y do Robo: %.2f" % (roboy))
