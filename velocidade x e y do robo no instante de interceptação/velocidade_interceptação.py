@@ -122,7 +122,7 @@ for linha in linha_arquivo1: # laço para alterar oq será escrito no novo txt
         break
 
 print("\n")
-teste = open("posição x e y até o momento de interceptação.txt","r")
+teste = open("posição x e y da bolinha até o momento de interceptação.txt","r")
 ler = teste.readlines()
 #print(*ler)
 
