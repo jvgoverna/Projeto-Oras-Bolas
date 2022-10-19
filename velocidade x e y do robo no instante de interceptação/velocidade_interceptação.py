@@ -130,16 +130,12 @@ k = int(t_desloc_min/0.02)
 
 for i in range(k):
     delta_x = (x - r_i) - (xirobo)
-    total_x = delta_x * 0.02
-print("Velocidade média em X = ",total_x)
+    total_x = delta_x * 0.02 + x-r_i * t_desloc_min
+print("Posição X do robo até o ponto de interceptação = %.4f " %(total_x))
 
 for i in range(k):
     delta_y =(y-r_i) - (yirobo)
-    total_y = delta_y *0.02
-print("Velocidade média em y = ",total_y)
-
-
-
-    
+    total_y = delta_y *0.02 + y-r_i * t_desloc_min
+print("Posição y do robo até o ponto de interceptação = %.4f" %(total_y))
 
 
