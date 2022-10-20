@@ -47,54 +47,97 @@ yrobo.append(yrobo)
 print("X do Robo: %.2f" % (xirobo))
 print("Y do Robo: %.2f" % (yirobo))
 
-
-
-
-
-
-
 # --------------- cálculo da interceptação ---------------
 
     # variáveis da interceptação
 
-x = 0       # posição X da bolinha na interceptação
-y = 0       # posição Y da bolinha na interceptação
+x = 0       # posição X da bolinha 
+y = 0       # posição Y da bolinha 
+x_int = 0     # posição X da bolinha na interceptação
+y_int = 0     # posição Y da bolinha na interceptação
 d_max = 0       # distância percorrida pelo robo até a interceptação
 d_min = 0       # distância percorrida pelo robo até a interceptação
+d1 = 0           # menor distância até a interceptação
+d2 = 0           # menor distância até a interceptação
 t_desloc_max = 0        # tempo que o robô leva para interceptar a bola
 t_desloc_min = 0        # tempo que o robô leva para interceptar a bola
 ang_r = 0     # ângulo da movimentação do robô    
-r_i = 0.1     # em (m) -> 10 cm
+ang_b = 0     # ângulo da movimentação da bolinha  
+r_i = 0.01     # em (m) 
+vR = 2.8
 
 def pit (cat1, cat2):
-    hip = sqrt(cat1*cat1 + cat2*cat2)
-    return hip
+    hip = cat1*cat1 + cat2*cat2
+    return sqrt(hip)
 
 for i in range(linha):
     x = posx[i]       # posição X da bolinha (percorre todas as posições possíveis, seguindo o tempo)
     y = posy[i]       # posição Y da bolinha                        ''
-    d_max = pit(x - xirobo, y - yirobo)     # passa para a função cada X e Y da bolinha, tirando as posições X e Y iniciais do robo
-    d_min = pit(x - r_i - xirobo, y - r_i - yirobo)     # passa para a função cada X e Y da bolinha, tirando as posições X e Y iniciais do robo
-    t_desloc_max = d_max / 2.8          # calcula o tempo de deslocamento do robô até o ponto 
-    t_desloc_min = (d_min - r_i) / 2.8
+    
+    if(y > 6):      # para que o robô não intercepte a bolinha fora do campo
+        pass
+    else:            
+        d1 = pit(x - xirobo, y - yirobo)     # passa para a função cada X e Y da bolinha, tirando as posições X e Y iniciais do robo #max
+        d2 = pit(x - r_i - xirobo, y - r_i - yirobo)     # passa para a função cada X e Y da bolinha, tirando as posições X e Y iniciais do robo #min
 
-    if((t_desloc_min <= temp[i]) ):        # caso o robo consiga chegar nesse ponto em um tempo menor ou igual à bolinha -- a interceptação ocorre
-        
-        ang_r = degrees(arctan((y - r_i - yirobo)/(x - r_i - xirobo)))
-        
-        print("Interceptou!")
-        break
+        if (d1 < d2):
+            d_min = d1
+            d_max = d2
+            x_int = x
+            y_int = y
+        else:
+            d_min = d2
+            d_max = d1
+            x_int = x - r_i
+            y_int = y - r_i
+
+        t_desloc_max = d_max / vR          # calcula o tempo de deslocamento do robô até o ponto 
+        t_desloc_min = d_min / vR          # guarda o tempo que leva para interceptar a bolinha
+
+        if((t_desloc_min <= temp[i]) ):        # caso o robo consiga chegar nesse ponto em um tempo menor ou igual à bolinha -- a interceptação ocorre
+            
+            ang_r = degrees(arctan((y_int - yirobo)/(x_int - xirobo)))
+            ang_b = degrees(arctan((y_int - posy[0])/(x_int - posx[0])))
+            print("Interceptou!")
+            break
 
 
-print("interceptação -- posição x: %.3f, posição y: %.3f" %(x, y))
-print("interceptação -- posição min x: %.3f, posição min y: %.3f" %(x - r_i, y - r_i))
+print("posição máxima: (%.3f, %.3f)" %(x, y))
+print("posição min: (%.3f, %.3f)" %(x - r_i, y - r_i)) #do robo
 print("tempo robo: %.3f, tempo bolinha: %.3f" %(t_desloc_max, temp[i]))
 print("tempo mínimo %.3f" %t_desloc_min)
 print("deslocamento max do robo: %.2f" %d_max)
 print("deslocamento min do robo: %.2f" %d_min)
 print("indice: %d" %(i+1))
-print("ângulo: %f" %ang_r)
+print("ângulo do robô: %f" %ang_r)
+print("ângulo da bolinha: %f" %ang_b)
 print("\n")
+
+# ------------------------------ GOL -----------------------------------
+
+xgd = 9.0           # X do gol da direita
+ygd = 3.0           # Y do gol da direita
+xge = 0             # X do gol da esquerda
+yge = 3.0           # Y do gol da esquerda
+dc = 0              # distância do chute até o gol
+ang_c = 0           # ângulo do chute até o gol
+
+
+if x_int >= 4.5:                           # se o X da interceptação for maior ou igual a 4.5 (metade do campo)
+    dc = pit(xgd - x_int, ygd - y_int)
+    ang_c = degrees(arctan((ygd - y_int)/(xgd - x_int)))
+    print("Gol da direita")
+    
+elif x_int < 4.5:                          # se o Y da interceptação for menor que 4.5 (metade do campo)
+    dc = pit(xge - x_int, yge - y_int)
+    ang_c = degrees(arctan((yge - y_int)/(xge - x_int)))
+    print("Gol da esquerda")
+
+print("Distância percorrida pela bola até o gol: %.2f" % dc)
+print("Ângulo da bola até o gol: %.2f" % ang_c)
+print("Coordenadas da interceptação: (%.2f, %.2f)" %(x_int, y_int))
+print("\n")
+
 
 vRseg = 0.058 #Velocidade do robo a cada 0.02s
 
@@ -121,10 +164,21 @@ for linha in linha_arquivo1: # laço para alterar oq será escrito no novo txt
         arquivo2.close()
         break
 
-print("\n")
-teste = open("posição x e y da bolinha até o momento de interceptação.txt","r")
-ler = teste.readlines()
-#print(*ler)
+posxBol = []
+posyBol = []
+
+arquivo2 = open("posição x e y da bolinha até o momento de interceptação.txt","r")
+arquivo2_linhas = arquivo2.readlines()
+for linhas in arquivo2_linhas:
+    linhaformatada2 = linhas.split()
+    posxBol.append(linhaformatada2[1])
+    posyBol.append(linhaformatada2[2])
+arquivo2.close()
+
+print(posxBol)
+print(posyBol)
+
+
 
 k = int(t_desloc_min/0.02)
 
@@ -137,5 +191,4 @@ for i in range(k):
     delta_y =(y-r_i) - (yirobo)
     total_y = delta_y *0.02 + y-r_i * t_desloc_min
 print("Posição y do robo até o ponto de interceptação = %.4f" %(total_y))
-
 
